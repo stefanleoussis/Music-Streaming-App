@@ -1,57 +1,15 @@
-<!-- FLOW: User fills out form. The php if statement is triggered when submit button is pressed,
-inputs are then sanitized to have valid data we can store in a database 
-Handle Form Submission -> Clean Data 
+<!-- FLOW: User fills out form. Inputs are sent to the register-handler file
+to be sanitized and validated.
 -->
 
 <?php
 
-function sanitizeFormPassword($inputText) { // Function will allow us to have a specific sanitizer for Username inputs
+  include("includes/handlers/register-handler.php"); // This is a link to the register-hanlder file that sanitizes our form Submission (think to thymeleaf fragments
+  // this is basically inserting the code from the register handler file), The path starts from where the register.php file is located
 
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away. str_tags & replace are used for sanitizing
-  return $inputText;
-}
+  include("includes/handlers/login-handler.php");
 
-function sanitizeFormUsername($inputText) { // Function will allow us to have a specific sanitizer for Username inputs
-
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away. str_tags & replace are used for sanitizing
-  $inputText = str_replace(" ", "", $inputText); // Replaces the first parameter with the second (Empty spaces will be replaced with an empty String(Technically discarded))
-  return $inputText;
-}
-
-function sanitizeFormString($inputText) { // Function will allow us to have a general sanitizer for user inputs
-
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away  str_tags & replace are known as sanitizing
-  $inputText = str_replace(" ", "", $inputText); // Replaces the first parameter with the second (Empty spaces will be replaced with an empty String(Technically discarded))
-  $inputText = ucfirst(strtolower($inputText)); // This will lowercase the entire string then uppercase the first letter
-  return $inputText;
-}
-
-
-
-if (isset($_POST['loginButton'])) {  // detects when the login button is pressed
- 
-}
-
-if (isset($_POST['registerButton'])) {  // detects when the register button is pressed
-  
-  // $ == variable 
-  // Call Username Sanitize Function
-    $username = sanitizeFormUsername($_POST['username']); 
-
-  // Call String Sanitize Function
-    $firstName = sanitizeFormString($_POST['firstName']); 
-    $lastName = sanitizeFormString($_POST['lastName']); 
-    $email = sanitizeFormString($_POST['email']); 
-    $email2 = sanitizeFormString($_POST['email2']); 
-
-  // Call Password Sanitize Function
-    $password = sanitizeFormPassword($_POST['password']); 
-    $password2 = sanitizeFormPassword($_POST['password2']); 
-  }
-?> <!-- Memory Note: php tags don't have to be at the top. You could put them anywhere -->
-
-
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
