@@ -1,12 +1,11 @@
-<!-- FLOW: User fills out form. Inputs are sent to the register-handler file
-to be sanitized and validated.
--->
-
 <?php
+
+  include("includes/classes/Account.php");
+  $account = new Account();
+
 
   include("includes/handlers/register-handler.php"); // This is a link to the register-hanlder file that sanitizes our form Submission (think to thymeleaf fragments
   // this is basically inserting the code from the register handler file), The path starts from where the register.php file is located
-
   include("includes/handlers/login-handler.php");
 
 ?>

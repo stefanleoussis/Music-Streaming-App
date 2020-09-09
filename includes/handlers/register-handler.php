@@ -22,27 +22,6 @@ function sanitizeFormString($inputText) { // Function will allow us to have a ge
   return $inputText;
 }
 
-// Validate Functions
-function validateUsername($un) { // Checking to see if user inputs meet our constraints (ex. username must contain one uppercase letter)
-
-}
-
-function validateFirstName($fn) {
-    
-}
-
-function validateLastName($ln) {
-    
-}
-function validateEmails($em, $em2) {
-    
-}
-function validatePasswords($pw, $pw2) {
-    
-}
-
-
-
 if (isset($_POST['registerButton'])) {  // detects when the register button is pressed
   
   // $ == variable 
@@ -59,12 +38,7 @@ if (isset($_POST['registerButton'])) {  // detects when the register button is p
     $password = sanitizeFormPassword($_POST['password']); 
     $password2 = sanitizeFormPassword($_POST['password2']); 
   
-  // Call Validation Functions (Make sure inputs meet requirements)
-    validate($username);
-    validate($firstname);
-    validate($lastname);
-    validate($email, $email2);
-    validate($password, $password2);
-
+    $account->register($username, $firstName, $lastName, $email, $email2, $password, $pasword2);
+  
 }
 ?> <!-- Memory Note: php tags don't have to be at the top. You could put them anywhere -->
