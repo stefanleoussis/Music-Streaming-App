@@ -38,7 +38,10 @@ if (isset($_POST['registerButton'])) {  // detects when the register button is p
     $password = sanitizeFormPassword($_POST['password']); 
     $password2 = sanitizeFormPassword($_POST['password2']); 
   
-    $account->register($username, $firstName, $lastName, $email, $email2, $password, $pasword2);
+    $wasSuccessful = $account->register($username, $firstName, $lastName, $email, $email2, $password, $password2);
   
+    if($wasSuccessful) { // $wasSuccessful evaluates to true
+      header("Location: index.php");
+    }
 }
 ?> <!-- Memory Note: php tags don't have to be at the top. You could put them anywhere -->
