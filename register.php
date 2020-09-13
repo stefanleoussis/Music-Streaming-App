@@ -1,57 +1,28 @@
-<!-- FLOW: User fills out form. The php if statement is triggered when submit button is pressed,
-inputs are then sanitized to have valid data we can store in a database 
-Handle Form Submission -> Clean Data 
+<!-- IMPORTANT Note: 
+if a function in a php class is static: you use :: to call it Ex.Constants::$firstNameCharacters and does not need to be to initalized
+
+if a function is just public then you would use Variable->function(); Ex.$account->getError(); This needs to be initalized in order to use the function like $account = new Account();
 -->
 
 <?php
+  include("includes/config.php");
+  include("includes/classes/Account.php");
+  include("includes/classes/Constants.php");
 
-function sanitizeFormPassword($inputText) { // Function will allow us to have a specific sanitizer for Username inputs
-
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away. str_tags & replace are used for sanitizing
-  return $inputText;
-}
-
-function sanitizeFormUsername($inputText) { // Function will allow us to have a specific sanitizer for Username inputs
-
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away. str_tags & replace are used for sanitizing
-  $inputText = str_replace(" ", "", $inputText); // Replaces the first parameter with the second (Empty spaces will be replaced with an empty String(Technically discarded))
-  return $inputText;
-}
-
-function sanitizeFormString($inputText) { // Function will allow us to have a general sanitizer for user inputs
-
-  $inputText = strip_tags($inputText); // If the User inputs html tags along with their username we can strip that away  str_tags & replace are known as sanitizing
-  $inputText = str_replace(" ", "", $inputText); // Replaces the first parameter with the second (Empty spaces will be replaced with an empty String(Technically discarded))
-  $inputText = ucfirst(strtolower($inputText)); // This will lowercase the entire string then uppercase the first letter
-  return $inputText;
-}
+  $account = new Account($con); // $con is to connecto to the databse. We use the $con from the config.php file and insert it in the Account.php file
 
 
+  include("includes/handlers/register-handler.php"); // This is a link to the register-hanlder file that sanitizes our form Submission (think to thymeleaf fragments
+  // this is basically inserting the code from the register handler file), The path starts from where the register.php file is located
+  include("includes/handlers/login-handler.php");
 
-if (isset($_POST['loginButton'])) {  // detects when the login button is pressed
- 
-}
-
-if (isset($_POST['registerButton'])) {  // detects when the register button is pressed
-  
-  // $ == variable 
-  // Call Username Sanitize Function
-    $username = sanitizeFormUsername($_POST['username']); 
-
-  // Call String Sanitize Function
-    $firstName = sanitizeFormString($_POST['firstName']); 
-    $lastName = sanitizeFormString($_POST['lastName']); 
-    $email = sanitizeFormString($_POST['email']); 
-    $email2 = sanitizeFormString($_POST['email2']); 
-
-  // Call Password Sanitize Function
-    $password = sanitizeFormPassword($_POST['password']); 
-    $password2 = sanitizeFormPassword($_POST['password2']); 
+  // Function is used to check if a input in a form has been submitted before and if so it will fill that input text box with the previous submission's answer
+  function getInputValue($name) { // Parameter $name == input name
+      if(isset($_POST[$name])) {
+          echo $_POST[$name];
+      }
   }
-?> <!-- Memory Note: php tags don't have to be at the top. You could put them anywhere -->
-
-
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -90,31 +61,40 @@ if (isset($_POST['registerButton'])) {  // detects when the register button is p
             <h2>Create your free account</h2>
 
             <p>
+             <?php echo $account->getError(Constants::$usernameCharacters); ?> <!-- Calling the getError Function in Account.php (files are linked through the includes(...); -->
              <label for="username">Username</label>  <!-- The for shoud equal the input id. This is so we can simply click the label and its field box will light up -->
-            <input id="username" name="username" type="text" placeholder="e.g. Bart Simpson" required>
+            <input id="username" name="username" type="text" placeholder="e.g. Bart Simpson" value="<?php getInputValue('username') ?>" required> <!-- call getInputValue function to see if we can fill this textbox with a previous submission -->
            </p> 
 
            <p>
+             <?php echo $account->getError(Constants::$firstNameCharacters); ?> <!-- Constants::$firstNameCharacters calls the value from the variable $firstNameCharacters in the Constants class. -->
              <label for="firstName">First Name</label>  
-            <input id="firstName" name="firstName" type="text" placeholder="e.g. Bart" required>
+            <input id="firstName" name="firstName" type="text" placeholder="e.g. Bart" value="<?php getInputValue('firstName') ?>" required>
            </p>  
 
            <p>
+             <?php echo $account->getError(Constants::$lastNameCharacters); ?>
              <label for="lastName">Last Name</label>  
-            <input id="lastName" name="lastName" type="text" placeholder="e.g. Simpson" required>
+            <input id="lastName" name="lastName" type="text" placeholder="e.g. Simpson" value="<?php getInputValue('lastName') ?>" required>
            </p> 
 
            <p>
+             <?php echo $account->getError(Constants::$emailsDoNotMatch); ?>
+             <?php echo $account->getError(Constants::$emailInvalid); ?>
              <label for="email">Email</label>  
-            <input id="email" name="email" type="email" placeholder="e.g. bart@gmail.com" required>
+            <input id="email" name="email" type="email" placeholder="e.g. bart@gmail.com" value="<?php getInputValue('email') ?>" required>
            </p> 
         
            <p>
             <label for="email2">Confirm Email</label>
-           <input id="email2" name="email2" type="email" placeholder="e.g. bart@gmail.com" required>
+           <input id="email2" name="email2" type="email" placeholder="e.g. bart@gmail.com" value="<?php getInputValue('email2') ?>" required>
            </p> 
            
            <p>
+            <?php echo $account->getError(Constants::$passwordsDoNotMatch); ?>
+            <?php echo $account->getError(Constants::$passwordNotAlphanumeric); ?>
+            <?php echo $account->getError(Constants::$passwordCharacters); ?>
+
             <label for="password">Password</label>
            <input id="password" name="password" type="password" placeholder="Your Password" required>
            </p> 
